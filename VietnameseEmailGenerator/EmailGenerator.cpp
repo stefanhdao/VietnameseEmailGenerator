@@ -211,8 +211,7 @@ int main(int argc, const char * argv[]) {
     std::cin >> password;
     if(!(password == "vietnamese" || password == "Vietnamese" || password == "VIETNAMESE"))
     {
-        std::cout << "NICE TRY, NSA!\n";
-        exit(42);
+        exit(1);
     }
     int total = 0;
 
