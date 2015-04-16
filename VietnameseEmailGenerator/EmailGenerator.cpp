@@ -17,6 +17,7 @@
 #include <fstream>
 #include <map>
 #include <vector>
+#include <algorithm>
 #include <sys/time.h>
 #include <stdlib.h>
 
@@ -202,6 +203,12 @@ int findNetIDs(std::string choice, std::map<std::string, std::string> & netIDs)
     return count;
 }
 
+bool is_number(const std::string& s)
+{
+    std::string::const_iterator it = s.begin();
+    while (it != s.end() && std::isdigit(*it)) ++it;
+    return !s.empty() && it == s.end();
+}
 
 int main(int argc, const char * argv[]) {
     // insert code here...
@@ -209,12 +216,14 @@ int main(int argc, const char * argv[]) {
     std::cout << "Program started! " << "\n";
     std::string password;
     std::cin >> password;
-    if(!(password == "vietnamese" || password == "Vietnamese" || password == "VIETNAMESE"))
+    std::transform(password.begin(), password.end(), password.begin(), ::tolower);
+    
+    if(!(password == "vietnamese"))
     {
         exit(1);
     }
     int total = 0;
-
+    //List of Vietnamese Last Names
     lastNames.push_back("nguyen");
     lastNames.push_back("tran");
     lastNames.push_back("le");
@@ -247,7 +256,17 @@ int main(int argc, const char * argv[]) {
     
     std::string choice;
     std::cin >> choice;
-
+    std::transform(choice.begin(), choice.end(), choice.begin(), ::tolower);
+    
+    if(is_number(choice))
+    {
+        int index = atoi(choice.c_str());
+        if(index > 0 && index <= lastNames.size())
+        {
+            choice = lastNames[index - 1];
+        }
+    }
+    
     std::cout << "Your choice is " << choice << std::endl;
     bool foundLastName = false;
     for(auto iter = lastNames.begin(); iter != lastNames.end(); iter++)
@@ -260,7 +279,7 @@ int main(int argc, const char * argv[]) {
     }
     if(!foundLastName)
     {
-        std::cout << "Did not enter a valid last name!\n";
+        std::cout << "Did not enter a valid last name! Please rerun program\n";
         exit(1);
     }
     
