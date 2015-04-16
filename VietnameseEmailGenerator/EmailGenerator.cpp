@@ -81,6 +81,8 @@ bool writeToEmailFile()
     return true;
 }
 
+//Recursive call for finding netids for last name
+
 int findNetIDsForString(std::string choice, std::string searchString, std::map<std::string, std::string> & mapForLastName)
 {
     int count = 0;
@@ -88,7 +90,7 @@ int findNetIDsForString(std::string choice, std::string searchString, std::map<s
     const char * suffix = "&search_type=student HTTP/1.1\r\nHost: illinois.edu\r\nConnection: keep-alive\r\n\r\n";
     
     std::string searchURL = std::string(prefix) + searchString + std::string(suffix);
-    int sockfd = createClientToServerConnection();
+    int sockfd = createClientToServerConnection(); //illinois.edu automatically closes connection each time
     std::cout << "SENDING: " << searchURL << std::endl;
     int sleepValue = rand() %10 + 60;
     sleep(sleepValue);
@@ -235,14 +237,14 @@ int main(int argc, const char * argv[]) {
     lastNames.push_back("truong");
     lastNames.push_back("dinh");
     lastNames.push_back("trieu");
-    std::cout << "Enter A Last Name for NetIDs\n";
+    lastNames.push_back("all");
+    std::cout << "Enter A Last Name for NetIDs (all lowercase letters!)\n";
     
     int i = 0;
     for(i = 0; i < lastNames.size(); i++)
     {
         std::cout << i + 1 << "." << std::string(lastNames[i]) << std::endl;
     }
-    std::cout << i + 1 << "." << "All" << std::endl;
     
     std::string choice;
     std::cin >> choice;
@@ -251,7 +253,7 @@ int main(int argc, const char * argv[]) {
     bool foundLastName = false;
     for(auto iter = lastNames.begin(); iter != lastNames.end(); iter++)
     {
-        if(*iter == choice || choice == "all")
+        if(*iter == choice)
         {
             foundLastName = true;
             break;
